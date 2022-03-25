@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+@TeleOp(name = "LetsGoSolo_ExTeleop")
 @Disabled
-//@TeleOp(name = "LetsGoSolo_ExTeleop")
 public class LetsGoSolo_ExTeleop extends LinearOpMode {
 
     private DcMotor front_left;
