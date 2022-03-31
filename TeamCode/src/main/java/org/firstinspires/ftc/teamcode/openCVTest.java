@@ -51,41 +51,51 @@ public class openCVTest extends OpMode {
     }
 
     class pipeline extends OpenCvPipeline {
-        Mat YCbCr = new Mat();
-        Mat leftCrop;
-        Mat rightCrop;
-        double leftavgfin;
-        double rightavgfin;
-        Mat output = new Mat();
-        Scalar rectColor = new Scalar(255.0, 174.0, 0.0);
+        private Mat YCbCr = new Mat();
+        private Mat leftCrop;
+        private Mat middleCrop;
+        private Mat rightCrop;
+        private double leftavgfin;
+        private double middleavgfin;
+        private double rightavgfin;
+        private Mat output = new Mat();
+        private Scalar rectColor = new Scalar(255.0, 174.0, 0.0);
 
         public Mat processFrame(Mat input) {
             Imgproc.cvtColor(input, YCbCr, Imgproc.COLOR_RGB2YCrCb);
             telemetry.addLine("Pipeline Running");
 
-            Rect leftRect = new Rect(1, 1, 319, 359);
-            Rect rightRect = new Rect(320, 1, 319, 359);
+            Rect leftRect = new Rect(1, 1, 212, 359);
+            Rect middleRect = new Rect(213,1,212,359);
+            Rect rightRect = new Rect(426, 1, 212, 359);
 
             input.copyTo(output);
             Imgproc.rectangle(output, leftRect, rectColor, 2);
+            Imgproc.rectangle(output, middleRect, rectColor, 2);
             Imgproc.rectangle(output, rightRect, rectColor, 2);
 
             leftCrop = YCbCr.submat(leftRect);
+            middleCrop = YCbCr.submat(middleRect);
             rightCrop = YCbCr.submat(rightRect);
 
             Core.extractChannel(leftCrop, leftCrop, 2);
+            Core.extractChannel(middleCrop, middleCrop, 2);
             Core.extractChannel(rightCrop, rightCrop, 2);
 
             Scalar leftavg = Core.mean(leftCrop);
+            Scalar middleavg = Core.mean(middleCrop);
             Scalar rightavg = Core.mean(rightCrop);
 
             leftavgfin = leftavg.val[0];
+            middleavgfin = middleavg.val[0];
             rightavgfin = rightavg.val[0];
 
-            if (leftavgfin > rightavgfin) {
+            if (leftavgfin < rightavgfin && leftavgfin < middleavgfin) {
+                telemetry.addLine("Left");
+            } else if (rightavgfin < leftavgfin && rightavgfin < middleavgfin) {
                 telemetry.addLine("Right");
             } else {
-                telemetry.addLine("Left");
+                telemetry.addLine("Middle");
             }
             return(output);
         }
