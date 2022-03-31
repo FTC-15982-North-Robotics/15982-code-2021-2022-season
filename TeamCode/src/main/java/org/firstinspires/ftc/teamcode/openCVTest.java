@@ -57,7 +57,7 @@ public class openCVTest extends OpMode {
         double leftavgfin;
         double rightavgfin;
         Mat output = new Mat();
-        Scalar rectColor = new Scalar(255.0, 0.0, 0.0);
+        Scalar rectColor = new Scalar(255.0, 174.0, 0.0);
 
         public Mat processFrame(Mat input) {
             Imgproc.cvtColor(input, YCbCr, Imgproc.COLOR_RGB2YCrCb);
@@ -83,9 +83,9 @@ public class openCVTest extends OpMode {
             rightavgfin = rightavg.val[0];
 
             if (leftavgfin > rightavgfin) {
-                telemetry.addLine("Left");
-            } else {
                 telemetry.addLine("Right");
+            } else {
+                telemetry.addLine("Left");
             }
             return(output);
         }
